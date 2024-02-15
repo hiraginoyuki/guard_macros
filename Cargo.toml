@@ -4,8 +4,6 @@ version = "1.0.0"
 edition = "2021"
 
 [lib]
-name = "guard_macros"
-path = "lib.rs"
 proc_macro = true
 
 [dependencies.proc-macro2]

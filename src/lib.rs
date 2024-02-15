@@ -84,7 +84,7 @@
 //! ## Example
 //!
 //! ```
-#![doc = include_str!("./examples/event_handling.rs")]
+#![doc = include_str!("../examples/event_handling.rs")]
 //! ```
 //!
 //!
