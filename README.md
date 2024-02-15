@@ -51,14 +51,14 @@ A "Refute Handler" is an expression that is executed when the condition of
 a clause is not met. It can be specified by appending `=>` followed by an
 expression, either:
 - to a single clause
-  ```
+  ```rs
   guard! {
       (pat) = (expr) => panic!("refuted"),
       (expr) => panic!("false"),
   }
   ```
 - or to a group of clauses enclosed by `{` `}`.
-  ```
+  ```rs
   guard! {
       {
           (pat) = (expr),
