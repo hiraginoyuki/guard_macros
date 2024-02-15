@@ -8,6 +8,10 @@ name = "guard_macros"
 path = "lib.rs"
 proc_macro = true
 
+[dependencies.proc-macro2]
+version = "1"
+default-features = false
+
 [dependencies.quote]
 version = "1"
 default-features = false
@@ -16,3 +20,6 @@ default-features = false
 version = "2"
 default-features = false
 features = ["printing", "parsing", "proc-macro", "full"]
+
+[features]
+debug-print = ["syn/extra-traits"]
