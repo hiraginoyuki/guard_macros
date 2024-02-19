@@ -1,8 +1,11 @@
 [package]
 name = "guard_macros"
-authors = ["Yuki Hiragino <yuki@shiina.family>"]
 version = "1.0.0"
 edition = "2021"
+license = "MIT"
+description = "Convenient Rust guard macros."
+authors = ["Yuki Hiragino <yuki@shiina.family>"]
+repository = "https://github.com/hiraginoyuki/guard_macros"
 
 [lib]
 proc_macro = true
