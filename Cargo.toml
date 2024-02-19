@@ -1,5 +1,6 @@
 [package]
 name = "guard_macros"
+authors = ["Yuki Hiragino <yuki@shiina.family>"]
 version = "1.0.0"
 edition = "2021"
 
