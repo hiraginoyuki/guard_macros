@@ -58,10 +58,6 @@ fn handle_message(event: &Event) -> Option<Action> {
     })
 }
 
-// make_guard!(hoge => return "noo");
-// fn bar() -> i32 { hoge!(false); 0 }
-// fn foo() -> u32 { hoge!(false); 0 }
-
 fn handle_error(event: &Event) -> Option<Action> {
     guard!(Event::Error { error } = event);
     // expands to:

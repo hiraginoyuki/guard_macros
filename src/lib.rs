@@ -1,13 +1,10 @@
-//! # guard_macros – *Early Returns Made Easy*
-//!
-//! ## Table of Contents
 //! - [Usage](#usage)
 //! - [Overview](#overview)
 //! - [Example](#example)
 //! - [Specification](#specification)
 //!
 //!
-//! ## Usage
+//! # Usage
 //! ```
 //! # use guard_macros::guard;
 //! # fn main() {
@@ -27,7 +24,7 @@
 //!     (expr),
 //!     (pat) = (expr) => panic!("refuted"),
 //!
-//!     // can be grouped and nested
+//!     // can be scoped and nested
 //!     {
 //!         (expr),
 //!         (pat) = (expr),
@@ -41,13 +38,13 @@
 //! ```
 //!
 //!
-//! ## Overview
+//! # Overview
 //!
 //! `guard_macros` provides two macros:
 //! - [`guard!`](./macro.guard.html) which replaces recurring `let`-`else` and
-//!   `if` statement(s).
-//! - [`make_guard!`](./macro.make_guard.html) which defines new guard macro(s)
-//!   with different default [Refute Handlers](#refute-handler).
+//!   `if` statements.
+//! - [`make_guard!`](./macro.make_guard.html) which defines new guard macros with
+//!   different default [Refute Handlers](#refute-handler).
 //!
 //! #### Refute Handler
 //!
@@ -80,15 +77,17 @@
 //!   }
 //!   # }
 //!   ```
+//!   > Note: By default, blocks create a new scope, but it can be disabled by
+//!   > prepending a `*` to the opening brace.
 //!
-//! ## Example
+//! # Example
 //!
 //! ```
 #![doc = include_str!("../examples/event_handling.rs")]
 //! ```
 //!
 //!
-//! ## Specification
+//! # Specification
 //!
 //! - [`guard!`](./macro.guard.html)
 //!   > <sup>**Syntax**</sup>
@@ -97,7 +96,7 @@
 //!   > &nbsp;&nbsp; _GuardDecl_ ( `,` _GuardDecl_ )* `,`<sup>?</sup>
 //!   >
 //!   > _GuardDecl_ : \
-//!   > &nbsp;&nbsp; &nbsp;&nbsp; `{` _GuardBody_ `}` _RefuteHandlerInheritable_ \
+//!   > &nbsp;&nbsp; &nbsp;&nbsp; `*`<sup>?</sup> `{` _GuardBody_ `}` _RefuteHandlerInheritable_ \
 //!   > &nbsp;&nbsp;            | _GuardClause_ _RefuteHandler_<sup>?</sup>
 //!   >
 //!   > _GuardClause_ : \

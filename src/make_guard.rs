@@ -33,7 +33,9 @@ impl MakeGuardExpr {
             macro_rules! #ident {
                 ($($tt:tt)*) => {
                     ::guard_macros::guard!(
-                        { $($tt)* } => #handler
+                        *{
+                            $($tt)*
+                        } => #handler
                     )
                 }
             }

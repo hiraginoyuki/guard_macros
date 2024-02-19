@@ -102,6 +102,7 @@ impl GuardClause {
 #[cfg_attr(feature = "debug-print", derive(Debug))]
 enum GuardDecl {
     Block {
+        asterisk: Option<Token![*]>,
         _brace: Brace,
         body: GuardBody,
         refute_handler: RefuteHandlerInheritable,
@@ -113,14 +114,16 @@ enum GuardDecl {
 }
 impl Parse for GuardDecl {
     fn parse(input: ParseStream) -> syn::Result<Self> {
-        if input.peek(Brace) {
+        if input.peek(Brace) || input.peek2(Brace) {
             let fork = input.fork();
+            let asterisk = fork.parse().ok();
             let interior;
             let brace = braced!(interior in fork);
 
             if let Some(handler) = RefuteHandlerInheritable::try_parse(&fork)? {
                 input.advance_to(&fork);
                 return Ok(Self::Block {
+                    asterisk,
                     _brace: brace,
                     body: interior.parse()?,
                     refute_handler: handler,
@@ -138,14 +141,19 @@ impl GuardDecl {
     fn expand(&self, refute_handler: &Expr) -> TokenStream {
         match self {
             Self::Block {
+                asterisk,
                 body,
                 refute_handler: handler,
                 ..
             } => {
                 let handler = handler.expr().unwrap_or(refute_handler);
                 let body = body.expand(handler);
-                quote! {
-                    { #body }
+                if asterisk.is_some() {
+                    body
+                } else {
+                    quote! {
+                        { #body }
+                    }
                 }
             }
             Self::Clause {
