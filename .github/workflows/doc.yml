@@ -1,0 +1,34 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  doc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+    - uses: dtolnay/rust-toolchain@be73d7920c329f220ce78e0234b8f96b7ae60248 # master
+      with:
+        toolchain: stable
+    - name: Build Rustdoc
+      run: cargo doc --no-deps
+    - name: Upload Artifact
+      uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+      with:
+        path: target/doc
+
+  deploy:
+    needs: doc
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@decdde0ac072f6dcbe43649d82d9c635fff5b4e4 # v4.0.4
