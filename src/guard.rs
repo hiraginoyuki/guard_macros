@@ -9,7 +9,7 @@ use syn::{
     Expr, Pat, Token,
 };
 
-use crate::common::{RefuteHandler, RefuteHandlerInheritable};
+use crate::common::{RefuteHandler, RefuteHandlerExt, RefuteHandlerInheritable};
 
 /// Assign expression found in `let`-`else`.
 #[cfg_attr(feature = "debug-print", derive(Debug))]
@@ -140,31 +140,23 @@ impl Parse for GuardDecl {
 impl GuardDecl {
     fn expand(&self, refute_handler: &Expr) -> TokenStream {
         match self {
+            Self::Clause {
+                clause,
+                refute_handler: handler,
+            } => clause.expand(handler.fallback(refute_handler)),
+
             Self::Block {
                 asterisk,
                 body,
                 refute_handler: handler,
                 ..
             } => {
-                let handler = handler.expr().unwrap_or(refute_handler);
-                let body = body.expand(handler);
+                let body = body.expand(handler.fallback(refute_handler));
                 if asterisk.is_some() {
                     body
                 } else {
-                    quote! {
-                        { #body }
-                    }
+                    quote!({ #body })
                 }
-            }
-            Self::Clause {
-                clause,
-                refute_handler: handler,
-            } => {
-                let handler = match handler {
-                    Some(handler) => handler.expr(),
-                    None => refute_handler,
-                };
-                clause.expand(handler)
             }
         }
     }

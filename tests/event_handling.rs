@@ -7,6 +7,7 @@ macro_rules! comment {
 
 use guard_macros::guard;
 
+#[cfg_attr(test, test)]
 fn main() {
     let event = Event::Message {
         author: "yuki".into(),

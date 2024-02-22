@@ -1,5 +1,6 @@
 use guard_macros::make_guard;
 
+#[cfg_attr(test, test)]
 fn main() {
     make_guard!(guard => _);
 

@@ -3,6 +3,10 @@ use syn::{
     Expr, Token,
 };
 
+pub trait RefuteHandlerExt {
+    fn fallback<'a>(&'a self, fallback: &'a Expr) -> &'a Expr;
+}
+
 #[cfg_attr(feature = "debug-print", derive(Debug))]
 pub struct RefuteHandler {
     _arrow: Token![=>],
@@ -27,6 +31,14 @@ impl RefuteHandler {
                 expr: input.parse()?,
             })),
             Err(_) => Ok(None),
+        }
+    }
+}
+impl RefuteHandlerExt for Option<RefuteHandler> {
+    fn fallback<'a>(&'a self, fallback: &'a Expr) -> &'a Expr {
+        match self {
+            Some(handler) => handler.expr(),
+            None => fallback,
         }
     }
 }
@@ -60,11 +72,10 @@ impl Parse for RefuteHandlerInheritable {
     }
 }
 impl RefuteHandlerInheritable {
-    pub fn expr(&self) -> Option<&Expr> {
-        if let Self::Expr { expr, .. } = self {
-            Some(expr)
-        } else {
-            None
+    pub fn fallback<'a>(&'a self, fallback: &'a Expr) -> &'a Expr {
+        match self {
+            Self::Expr { expr, .. } => expr,
+            _ => fallback,
         }
     }
     pub fn try_parse(input: ParseStream) -> syn::Result<Option<Self>> {
@@ -83,6 +94,14 @@ impl RefuteHandlerInheritable {
                 }
             }
             Err(_) => Ok(None),
+        }
+    }
+}
+impl RefuteHandlerExt for RefuteHandlerInheritable {
+    fn fallback<'a>(&'a self, fallback: &'a Expr) -> &'a Expr {
+        match self {
+            Self::Expr { expr, .. } => expr,
+            _ => fallback,
         }
     }
 }
